@@ -2,37 +2,43 @@
   "use strict";
 
   function DOM(attribute){
+    if(!(this instanceof DOM))
+      return new DOM(attribute);
+
     this.element = doc.querySelectorAll(attribute);
 
-    this.isArray = function isArray(arg){
-    return Object.prototype.toString.call(arg) === '[object Array]';
-    };
-
-    this.isObject = function isObject(arg){
-      return Object.prototype.toString.call(arg) === '[object Object]';
-    };
-
-    this.isFunction = function isFunction(arg){
-      return Object.prototype.toString.call(arg) === '[object Function]';
-    };
-
-    this.isNumber = function isNumber(arg){
-      return Object.prototype.toString.call(arg) === '[object Number]';
-    };
-
-    this.isString = function isString(arg){
-      return Object.prototype.toString.call(arg) === '[object String]';
-    };
-
-    this.isBoolean = function isBoolean(arg){
-      return Object.prototype.toString.call(arg) === '[object Boolean]';
-    };
-
-    this.isNull = function isNull(arg){
-      var argType = Object.prototype.toString.call(arg);
-      return argType === '[object Null]' || argType === '[object Undefined]';
-    };
+    if(this.element.length === 1)
+      return this.get();
   }
+
+  DOM.isArray = function isArray(arg){
+    return Object.prototype.toString.call(arg) === '[object Array]';
+  };
+
+  DOM.isObject = function isObject(arg){
+    return Object.prototype.toString.call(arg) === '[object Object]';
+  };
+
+  DOM.isFunction = function isFunction(arg){
+    return Object.prototype.toString.call(arg) === '[object Function]';
+  };
+
+  DOM.isNumber = function isNumber(arg){
+    return Object.prototype.toString.call(arg) === '[object Number]';
+  };
+
+  DOM.isString = function isString(arg){
+    return Object.prototype.toString.call(arg) === '[object String]';
+  };
+
+  DOM.isBoolean = function isBoolean(arg){
+    return Object.prototype.toString.call(arg) === '[object Boolean]';
+  };
+
+  DOM.isNull = function isNull(arg){
+    var argType = Object.prototype.toString.call(arg);
+    return argType === '[object Null]' || argType === '[object Undefined]';
+  };
 
   DOM.prototype.on = function on(event, callback){
     Array.prototype.forEach.call(this.element, function(node){
@@ -46,8 +52,10 @@
     })
   };
 
-  DOM.prototype.get = function get(){
-    return this.element;
+  DOM.prototype.get = function get(index){
+    if(!index)
+      return this.element[0];
+    return this.element[index];
   }
 
   DOM.prototype.forEach = function forEach(callback){

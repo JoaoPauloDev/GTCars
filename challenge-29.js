@@ -1,4 +1,4 @@
-(function(DOM, doc) {
+(function($, doc) {
   'use strict';
 
   /*
@@ -38,11 +38,11 @@
 
   var app = (function app(){
 
-    var $companyPhone = new DOM('[data-js="companyPhone"]').element[0];
-    var $companyName = new DOM('[data-js="companyName"]').element[0];
-    var $btnCadastrar = new DOM('[data-js="btnCadastrar"]').element[0];
-    var $carsTable = new DOM('[data-js="carsTable"]').element[0];
-    var $inputsForm = new DOM('[data-js="ipt"]');
+    var $companyName = $('[data-js="companyName"]');
+    var $companyPhone = $('[data-js="companyPhone"]');
+    var $btnCadastrar = $('[data-js="btnCadastrar"]');
+    var $carsTable = $('[data-js="carsTable"]');
+    var $inputsForm = $('[data-js="ipt"]');
     var docFragment = doc.createDocumentFragment();
     var ajax = new XMLHttpRequest();
 
@@ -115,6 +115,5 @@
   })();
 
   window.appRegisterCar = app;
-
 
 })(window.DOM, document);
