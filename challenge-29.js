@@ -52,16 +52,17 @@
         newTableLine();
       else
         alert('Por favor, preencha todos os campos.');
-    }
+    };
 
     var newTableLine = function newTableLine(){
-      var row = doc.createElement("TR");
-      var dataCells = $inputsForm.forEach(function fillRowCells(item){
+      var row = doc.createElement('TR');
+      $inputsForm.forEach(function fillRowCells(item){
         createDataCell(row, item)
       });
+      row.appendChild(createDeleteButtonCell());
       docFragment.appendChild(row);
       $carsTable.appendChild(docFragment);
-    }
+    };
 
     var createDataCell = function createDataCell(row, item){
       var data = doc.createElement('TD');
@@ -73,29 +74,42 @@
         data.appendChild(text);
         row.appendChild(data);
       }
-    }
+    };
+
+    var createDeleteButtonCell = function createDeleteButtonCell(){
+      var td = doc.createElement('TD');
+      var btnDeletar = doc.createElement('BUTTON');
+      btnDeletar.addEventListener('click', deleteLine, false);
+      btnDeletar.textContent = 'X';
+      td.appendChild(btnDeletar);
+      return td;
+    };
+
+    var deleteLine = function deleteLine(){
+        $carsTable.removeChild(this.parentElement.parentElement); 
+    };
 
     var allFieldsFilled = function allFieldsFilled(){
       return $inputsForm.every(hasValue);
-    }
+    };
 
     var createIMG = function createIMG(src){
       var img = doc.createElement('IMG');
       img.setAttribute('src', src);
       img.setAttribute('class','carImage');
       return img;
-    }
+    };
 
     var hasValue = function hasValue(item){
       return item.value !== "";
-    }
+    };
 
     var setCompanyNamePhone = function setCompanyNamePhone(){
       if(ajax.readyState === 4 && ajax.status === 200){
         $companyName.textContent = JSON.parse(ajax.responseText).name;
         $companyPhone.textContent = JSON.parse(ajax.responseText).phone;
       }
-    }
+    };
 
     ajax.open('get', 'http://localhost:8080/company.json');
     ajax.send();
@@ -109,7 +123,9 @@
       'allFieldsFilled' : allFieldsFilled,
       'createIMG' : createIMG,
       'hasValue' : hasValue,
-      'setCompanyNamePhone' : setCompanyNamePhone
+      'setCompanyNamePhone' : setCompanyNamePhone,
+      'createDeleteButtonCell' : createDeleteButtonCell,
+      'deleteLine' : deleteLine
     };
 
   })();
