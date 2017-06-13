@@ -12,6 +12,7 @@
     var ajaxCompanyInfo = new XMLHttpRequest();
     var ajaxGetCars = new XMLHttpRequest();
     var ajaxPostCar = new XMLHttpRequest();
+    var ajaxRemoveCar = new XMLHttpRequest();
 
     function getCompanyInfo(){
       if(isAjaxReady(ajaxCompanyInfo)){
@@ -52,9 +53,16 @@
       var td = doc.createElement('TD');
       var btn = doc.createElement('BUTTON');
       btn.textContent = 'X';
-      btn.addEventListener('click', removeRow, false);
+      btn.addEventListener('click', removeCar, false);
       td.appendChild(btn);
       return td;
+    }
+
+    function removeCar(){
+      ajaxRemoveCar.open('DELETE', 'http://localhost:3000/car');
+      ajaxRemoveCar.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+      ajaxRemoveCar.send('plate=' + this.parentElement.parentElement.children[3].textContent);
+      ajaxRemoveCar.addEventListener('readystatechange', succesRequest, false);
     }
 
     function removeRow(){
@@ -93,11 +101,11 @@
       ajaxPostCar.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
       var data = generateData();
       ajaxPostCar.send(data);
-      ajaxPostCar.addEventListener('readystatechange', succesRegister, false);
+      ajaxPostCar.addEventListener('readystatechange', succesRequest, false);
     }
 
-    function succesRegister(){
-      if(ajaxPostCar.readyState === 4 && ajaxPostCar.status === 200){
+    function succesRequest(){
+      if(this.readyState === 4 && this.status === 200){
         cleanTable();
         ajaxGet();
       }
@@ -114,10 +122,9 @@
     }
 
     function cleanTable(){
-      var rows = $('[data-js="carRow"]');
-      rows.forEach(function(item){
-        $tableCars.removeChild(item);
-      });
+      for(var x = 1; x < $tableCars.rows.length;){
+        $tableCars.removeChild($tableCars.rows[x]);
+      }
     }
 
     function ajaxCompany(){
@@ -148,7 +155,7 @@
       'fieldsFilled': fieldsFilled,
       'registerNewCar': registerNewCar,
       'sendCarInfo': sendCarInfo,
-      'succesRegister': succesRegister,
+      'succesRequest': succesRequest,
       'generateData': generateData,
       'cleanTable': cleanTable,
       'ajaxCompany': ajaxCompany,
